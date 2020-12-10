@@ -12,5 +12,7 @@ namespace KhemicalKoder.Data
         }
 
         public DbSet<Article> Article { get; set; }
+
+        public DbSet<KhemicalKoderUser> KhemicalKoderUsers { set; get; }
     }
 }
