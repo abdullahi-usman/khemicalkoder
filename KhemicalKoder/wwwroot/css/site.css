@@ -85,3 +85,58 @@ body {
     white-space: nowrap;
     width: 100%;
 }
+
+/*-------------------------------- Project Additions ----------------------*/
+
+
+.maintenance-note {
+    margin-bottom: 7vh;
+    margin-top: 7vh;
+}
+
+.fira-sans-font {
+    font-family: 'Fira Sans', sans-serif;
+}
+
+.flex-mobile-wrap {
+    flex-flow: row nowrap;
+}
+
+.font-size-larger {
+    font-size: larger;
+}
+
+.position-rel-bottom {
+    position: absolute;
+    bottom: 60px;
+    right: 12px;
+}
+
+.max-width-800 {
+    max-width: 800px;
+}
+
+.layout-center {
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+
+}
+
+@media (max-width: 800px) {
+    .maintenance-note {
+        margin-bottom: 15vh;
+        margin-top: 15vh;
+    }
+
+    .flex-mobile-wrap {
+        flex-flow: column wrap;
+    }
+
+    .position-rel-bottom {
+        position: absolute;
+        bottom: 60px;
+        right: 50%;
+        left: 50%;
+    }
+}

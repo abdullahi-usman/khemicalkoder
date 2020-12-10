@@ -1,5 +1,4 @@
 ﻿using KhemicalKoder.Areas.Identity;
-using KhemicalKoder.Data;
 using KhemicalKoder.Models;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
