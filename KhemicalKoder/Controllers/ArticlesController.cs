@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using KhemicalKoder.Data;
 using KhemicalKoder.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+
 using Newtonsoft.Json;
 
 namespace KhemicalKoder.Controllers
@@ -25,14 +27,18 @@ namespace KhemicalKoder.Controllers
                 return View("Error", "No Article");
 
             Article article;
+            var articles = _context.Article.ToList();
+            articles.Reverse();
 
-            if (id == null) article = _context.Article.FirstOrDefault();
+            if (id == null) {
+                article = articles.First();
+            }
             else
                 article = await _context.Article.FindAsync(id);
 
             if (article == null) return View("Error", "No Such Article");
 
-            var articles = _context.Article.ToList();
+            
             var articlePosition = articles.FindIndex(predict => predict.Id == article.Id);
 
             if (articles.Count > articlePosition + 1)

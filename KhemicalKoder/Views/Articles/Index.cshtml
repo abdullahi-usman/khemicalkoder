@@ -15,7 +15,12 @@
     </button>
 </div>
 
+<div class="float-left">
+    @Model.Date.ToLongDateString()
+</div>
+
 <div class="clearfix"></div>
+
 <div id="articles_main" class="container text-center">
     <div class="display-4">@Model.Title</div>
     <div class="text-center text-justify">@Model.Story</div>

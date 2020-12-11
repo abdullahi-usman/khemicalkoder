@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using KhemicalKoder.Data;
 using KhemicalKoder.Models;
@@ -49,6 +50,7 @@ namespace KhemicalKoder.Controllers
         {
             if (ModelState.IsValid)
             {
+                article.Date = DateTime.Now;
                 _context.Add(article);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
