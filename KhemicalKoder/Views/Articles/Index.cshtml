@@ -3,18 +3,48 @@
 *@
 @model Article
 @{
-   
+    var next = ViewData["article-next"] ;
+    var previous = ViewData["article-prev"];
 }
 
-<div id="articles_main">
+<div class="form-inline my-2 float-right flex-column">
+    <div>
+        <input id="articles_search_bar" type="search" class="form-control mr-sm-2" placeholder="Article Search" aria-label="Article Search Box" />
+        <button id="articles_search_btn" class="btn btn-outline-primary" type="submit" onclick="articles_search_clicked($('#articles_search_bar').val())">
+            Search
+            <div id="articles_search_spinner" class="spinner-border search-spinner" style="display: none" role="status"><span class="spinner-border sr-only"></span></div>
+        </button>
+    </div>
+
+</div>
+
+<div class="clearfix"></div>
+<div id="articles_main" class="container text-center">
+    <div class="display-4">@Model.Title</div>
     <div class="text-center text-justify">@Model.Story</div>
 </div>
 
-<div class="position-rel-bottom">
-    <nav aria-label="Article Page Navigation">
+<div class="container position-rel-bottom">
+    <nav aria-label="Article Page Navigation" class="float-right">
         <ul class="pagination justify-content-center">
-            <li class="page-item"><a class="page-link" href="#">Prevoius</a></li>
-            <li class="page-item"><a class="page-link" href="#">Next</a></li>
+            @if (previous == null)
+            {
+                <li class="page-item disabled"><a class="page-link" asp-controller="Articles" asp-action="Index" asp-route-id="@previous">Prevoius</a></li>
+            }
+            else
+            {
+                <li class="page-item"><a class="page-link" asp-controller="Articles" asp-action="Index" asp-route-id="@previous">Prevoius</a></li>
+            }
+            
+            @if (next == null)
+            {
+                <li class="page-item disabled"><a class="page-link" asp-controller="Articles" asp-action="Index" asp-route-id="@next">Next</a></li>
+            }
+            else
+            {
+                <li class="page-item"><a class="page-link" asp-controller="Articles" asp-action="Index" asp-route-id="@next">Next</a></li>
+            }
+           
         </ul>
     </nav>
 </div>
