@@ -11,13 +11,10 @@ function articles_search_clicked(searchString) {
         placement: 'bottom',
         content: ''
     };
-
     
     searchBar.on('focusout', _ => {
         searchBar.popover('dispose');
     });
-
-
 
     if (searchString == null || searchString.length <= 0) {
         searchBarOptions.content = 'Search text cannot be empty';
@@ -50,6 +47,14 @@ function articles_search_clicked(searchString) {
 
         if (result.length <= 0) {
             searchBarOptions.content.innerText = "No search result found!";
+            searchBarOptions.content.classList.add('text-secondary');
+
+            /* This focusing is here so as to make sure search popover is dismissable when the content is a simple text 
+             -----------------------------------------------------------
+             dismissing focus can be very difficult
+             */
+            searchBar.focus();
+
         } else {
             searchBarOptions.content.classList.add("list-group");
             searchBarOptions.content.classList.add("list-group-flush");
@@ -65,9 +70,14 @@ function articles_search_clicked(searchString) {
         }
 
         var searchBarPopover = searchBar.popover(searchBarOptions);
-        
-        searchBar.focus();
+
         searchBarPopover.popover('show');
+
+        /* since this is the new addition, base on the content i bet it should be the new focusable */
+        searchBarPopover.on('focusout', (event) => {
+            event.stopPropagation();
+            searchBar.popover('dispose');
+        })
      
         searchSpinner.hide();
         searchBtn.removeClass("disabled");

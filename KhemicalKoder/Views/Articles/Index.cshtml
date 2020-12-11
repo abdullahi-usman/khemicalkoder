@@ -3,19 +3,16 @@
 *@
 @model Article
 @{
-    var next = ViewData["article-next"] ;
+    var next = ViewData["article-next"];
     var previous = ViewData["article-prev"];
 }
 
-<div class="form-inline my-2 float-right flex-column">
-    <div>
-        <input id="articles_search_bar" type="search" class="form-control mr-sm-2" placeholder="Article Search" aria-label="Article Search Box" />
-        <button id="articles_search_btn" class="btn btn-outline-primary" type="submit" onclick="articles_search_clicked($('#articles_search_bar').val())">
-            Search
-            <div id="articles_search_spinner" class="spinner-border search-spinner" style="display: none" role="status"><span class="spinner-border sr-only"></span></div>
-        </button>
-    </div>
-
+<div class="form-inline my-2 float-right">
+    <input id="articles_search_bar" type="search" class="form-control mr-sm-2" placeholder="Article Search" aria-label="Article Search Box" />
+    <button id="articles_search_btn" class="btn btn-outline-primary" type="submit" onclick="articles_search_clicked($('#articles_search_bar').val())">
+        Search
+        <div id="articles_search_spinner" class="spinner-border search-spinner" style="display: none" role="status"><span class="spinner-border sr-only"></span></div>
+    </button>
 </div>
 
 <div class="clearfix"></div>
@@ -35,7 +32,7 @@
             {
                 <li class="page-item"><a class="page-link" asp-controller="Articles" asp-action="Index" asp-route-id="@previous">Prevoius</a></li>
             }
-            
+
             @if (next == null)
             {
                 <li class="page-item disabled"><a class="page-link" asp-controller="Articles" asp-action="Index" asp-route-id="@next">Next</a></li>
@@ -44,7 +41,7 @@
             {
                 <li class="page-item"><a class="page-link" asp-controller="Articles" asp-action="Index" asp-route-id="@next">Next</a></li>
             }
-           
+
         </ul>
     </nav>
 </div>
