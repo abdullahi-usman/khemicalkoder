@@ -23,7 +23,13 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
+@foreach (var item in Model)
+{
+   
+    @if (item.Story.Length > 300)
+    {
+        item.Story = @item.Story.Substring(0, item.Story.IndexOf(" ", 200));
+    }        
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.Title)

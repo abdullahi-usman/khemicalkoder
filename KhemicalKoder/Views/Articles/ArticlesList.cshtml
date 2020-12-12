@@ -24,15 +24,16 @@
             <a class="display-4 card-link text-info d-block" asp-area="" asp-controller="Articles" asp-action="Index" asp-route-id="@item.Id">@item.Title</a>
         </div>
       @{ 
-          var articleText = item.Story;
+          
           if (item.Story.Length > 300)
           {
-              articleText = @item.Story.Substring(0, 300);
+
+              item.Story = @item.Story.Substring(0, item.Story.IndexOf(" ", 200));
           }
 
       } 
         
-        <div class="text-secondary text-center mb-1 w-75 text-justify ml-auto mr-auto"> @Html.DisplayFor(modelItem => articleText) </div>
+        <div class="text-secondary text-center mb-1 w-75 text-justify ml-auto mr-auto"> @Html.DisplayFor(modelItem => item.Story) </div>
         
     </div>
           }
