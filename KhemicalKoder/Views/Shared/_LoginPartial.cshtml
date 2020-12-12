@@ -1,6 +1,9 @@
 ﻿@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.Authorization
+
 @inject SignInManager<KhemicalKoderUser> SignInManager
 @inject UserManager<KhemicalKoderUser> UserManager
+@inject IAuthorizationService authorization
 
 <ul class="navbar-nav">
 @if (SignInManager.IsSignedIn(User))
@@ -14,13 +17,14 @@
         </form>
     </li>
 }
-else
+
+@if((await authorization.AuthorizeAsync(User, "IsAdmin")).Succeeded)
 {
     <li class="nav-item">
         <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Register">Register</a>
     </li>
-    <li class="nav-item">
+   @* <li class="nav-item">
         <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Login">Login</a>
-    </li>
+    </li>*@
 }
 </ul>

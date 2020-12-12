@@ -3,11 +3,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using KhemicalKoder.Data;
 using KhemicalKoder.Models;
+
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace KhemicalKoder.Controllers
 {
+    [Authorize("IsAdmin")]
     public class ManageArticlesController : Controller
     {
         private readonly ApplicationDbContext _context;
