@@ -8,19 +8,22 @@
 <h1>Create</h1>
 
 <h4>Article</h4>
+
+<button class="btn btn-dark" onclick="manage_articles_preview_toggle()">Toggle Preview</button> 
+
 <hr />
-<div class="row">
+<div id="manage_articles_editor" class="row">
     <div class="col max-width-800 layout-center">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Title" class="control-label"></label>
-                <input asp-for="Title" class="form-control" />
+                <input id="manage_articles_title" asp-for="Title" class="form-control" />
                 <span asp-validation-for="Title" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Story" class="control-label"></label>
-                <textarea rows="6" asp-for="Story" class="form-control" ></textarea>
+                <textarea id="manage_articles_story" rows="6" asp-for="Story" class="form-control" ></textarea>
                 <span asp-validation-for="Story" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -28,6 +31,11 @@
             </div>
         </form>
     </div>
+</div>
+
+<div id="articles_preview_container" style="display: none" class="flex-column container container-fluid container-max-800 mr-auto ml-auto w-50-responsive">
+    <div id="articles_preview_title" class="col d-block display-4"></div>
+    <div id="articles_preview_story" class="col d-block text-justify"></div>
 </div>
 
 <div>

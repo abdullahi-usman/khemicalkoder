@@ -106,3 +106,18 @@ function articleslist_search_clicked(searchString) {
     link.href = baseURI + '/articles/search?searchString=' + searchString + "&actionView=true";
     link.click();
 }
+
+function manage_articles_preview_toggle() {
+    if ($('#articles_preview_container').is(':hidden')) {
+       
+        $('#articles_preview_container').show('slow', () => {
+            $('#articles_preview_title').html($('#manage_articles_title').val())
+            $('#articles_preview_story').html($('#manage_articles_story').val())
+        });
+
+        $('#manage_articles_editor').hide('fast');
+    } else {
+        $('#manage_articles_editor').show('fast');
+        $('#articles_preview_container').hide('slow');
+    }
+}
