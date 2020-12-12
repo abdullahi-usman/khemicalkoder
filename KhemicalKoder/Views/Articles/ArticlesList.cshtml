@@ -4,37 +4,43 @@
 
 @model IEnumerable<Article>
 @{
-    
+
 }
 
-
-<form class="form-inline my-2 my-lg-0">
+<form class="form-inline my-2" asp-controller="articles" asp-action="searchonview">
     <div class="w-50-responsive container-fluid text-center mr-auto ml-auto">
-        <input id="articleslist_search_bar" class="form-control mr-sm-2" type="search" placeholder="Search Articles" aria-label="Search Articles">
-        <button class="btn btn-outline-success my-2 my-sm-0 float-right-responsive" type="submit" onclick="articleslist_search_clicked($('#articleslist_search_bar').val())">Search</button>
+        <input name="searchString" value="" id="articleslist_search_bar" class="form-control mr-sm-2" type="search" placeholder="Search Articles" aria-label="Search Articles">
+        <button class="btn btn-outline-success my-2 my-sm-0 float-right-responsive" type="submit">Search</button>
     </div>
 </form>
 
+@if (Model.Count() > 0)
+{
+    <div class="container-max-800 mr-auto ml-auto list-group-flush">
+        @foreach (var item in Model)
+        {
+            <div class="list-group-item list-group-item-action article-item">
+                <div>
+                    <div class="float-right font-weight-lighter">@item.Date.ToShortDateString()</div>
+                    <a class="display-4 card-link text-info d-block" asp-area="" asp-controller="Articles" asp-action="Index" asp-route-id="@item.Id">@item.Title</a>
+                </div>
+                @{
 
-<div class="container-max-800 mr-auto ml-auto list-group-flush">
-    @foreach(var item in Model){
-    <div class="list-group-item list-group-item-action article-item">
-        <div>
-            <div class="float-right font-weight-lighter">@item.Date.ToShortDateString()</div>
-            <a class="display-4 card-link text-info d-block" asp-area="" asp-controller="Articles" asp-action="Index" asp-route-id="@item.Id">@item.Title</a>
-        </div>
-      @{ 
-          
-          if (item.Story.Length > 300)
-          {
+                    if (item.Story.Length > 300)
+                    {
 
-              item.Story = @item.Story.Substring(0, item.Story.IndexOf(" ", 200));
-          }
+                        item.Story = @item.Story.Substring(0, item.Story.IndexOf(" ", 200));
+                    }
 
-      } 
-        
-        <div class="text-secondary text-center mb-1 w-75 text-justify ml-auto mr-auto"> @Html.DisplayFor(modelItem => item.Story) </div>
-        
+                }
+
+                <div class="text-secondary text-center mb-1 w-75 text-justify ml-auto mr-auto"> @Html.DisplayFor(modelItem => item.Story) </div>
+
+            </div>
+        }
     </div>
-          }
-</div> 
+}
+else
+{
+    <div class="display-2 text-center">No Articles Found</div>
+}

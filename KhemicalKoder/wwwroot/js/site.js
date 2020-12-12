@@ -36,7 +36,7 @@ function articles_search_clicked(searchString) {
 
     var baseURI = document.location.href.replace(document.location.pathname, '');
     var request = new XMLHttpRequest();
-    request.open('GET', baseURI + '/articles/search?searchString=' + searchString);
+    request.open('GET', baseURI + '/articles/api/search/' + searchString);
 
     request.onload = function() {
         console.log(request.response);
@@ -102,9 +102,8 @@ function articles_search_clicked(searchString) {
 
 function articleslist_search_clicked(searchString) {
     var baseURI = document.location.href.replace(document.location.pathname, '');
-    var link = document.createElement('a');
-    link.href = baseURI + '/articles/search?searchString=' + searchString + "&actionView=true";
-    link.click();
+    baseURI = baseURI + '/articles/search/' + searchString;
+    window.location.href = baseURI;
 }
 
 function manage_articles_preview_toggle() {

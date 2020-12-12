@@ -6,6 +6,7 @@ using KhemicalKoder.Data;
 using KhemicalKoder.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Primitives;
 
 using Newtonsoft.Json;
 
@@ -76,11 +77,24 @@ namespace KhemicalKoder.Controllers
 
             return articles;
         }
-
+        
        
+        [HttpGet]
         public async Task<IActionResult> SearchOnView(string searchString)
         {
             List<Article> articles = await GetArticlesMatchingName(searchString);
+
+            return View("ArticlesList", articles);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SearchOnView()
+        {
+            var form = this.Request.Form;
+            StringValues searchString;
+            form.TryGetValue("searchString", out searchString);
+            
+            List<Article> articles = await GetArticlesMatchingName(searchString[0]);
 
             return View("ArticlesList", articles);
         }
