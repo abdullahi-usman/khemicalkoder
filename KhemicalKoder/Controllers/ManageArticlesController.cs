@@ -77,7 +77,7 @@ namespace KhemicalKoder.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Story")] Article article)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Date,Title,Story")] Article article)
         {
             if (id != article.Id) return NotFound();
 
@@ -85,7 +85,11 @@ namespace KhemicalKoder.Controllers
             {
                 try
                 {
-                    _context.Update(article);
+                    var dbArticle = await _context.Article.FindAsync(id);
+                    dbArticle.Title = article.Title;
+                    dbArticle.Story = article.Story;
+                    
+                    _context.Update(dbArticle);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
