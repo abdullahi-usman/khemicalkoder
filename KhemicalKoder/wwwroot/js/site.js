@@ -99,3 +99,10 @@ function articles_search_clicked(searchString) {
 
     request.send();
 }
+
+function articleslist_search_clicked(searchString) {
+    var baseURI = document.location.href.replace(document.location.pathname, '');
+    var link = document.createElement('a');
+    link.href = baseURI + '/articles/search?searchString=' + searchString + "&actionView=true";
+    link.click();
+}

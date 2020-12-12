@@ -57,9 +57,16 @@ namespace KhemicalKoder
 
             app.UseEndpoints(endpoints =>
             {
+               
+                endpoints.MapControllerRoute(name: "articles", pattern: "articles/search/{searchString?}", defaults: new { controller = "Articles", action = "Search" });
+
+                endpoints.MapControllerRoute(name: "articles", pattern: "articles/search/{searchString?}/actionView", defaults: new { controller = "Articles", action = "SearchOnView" });
+
                 endpoints.MapControllerRoute(
                     "default",
                     "{controller=Home}/{action=Index}/{id?}");
+
+                
                 endpoints.MapRazorPages();
             });
         }

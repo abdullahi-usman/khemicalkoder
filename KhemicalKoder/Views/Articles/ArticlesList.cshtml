@@ -1,0 +1,39 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+
+@model IEnumerable<Article>
+@{
+    
+}
+
+
+<form class="form-inline my-2 my-lg-0">
+    <div class="w-50-responsive container-fluid text-center mr-auto ml-auto">
+        <input id="articleslist_search_bar" class="form-control mr-sm-2" type="search" placeholder="Search Articles" aria-label="Search Articles">
+        <button class="btn btn-outline-success my-2 my-sm-0 float-right-responsive" type="submit" onclick="articleslist_search_clicked($('#articleslist_search_bar').val())">Search</button>
+    </div>
+</form>
+
+
+<div class="container-max-800 mr-auto ml-auto list-group-flush">
+    @foreach(var item in Model){
+    <div class="list-group-item list-group-item-action article-item">
+        <div>
+            <div class="float-right font-weight-lighter">@item.Date.ToShortDateString()</div>
+            <a class="display-4 card-link text-info d-block" asp-area="" asp-controller="Articles" asp-action="Index" asp-route-id="@item.Id">@item.Title</a>
+        </div>
+      @{ 
+          var articleText = item.Story;
+          if (item.Story.Length > 300)
+          {
+              articleText = @item.Story.Substring(0, 300);
+          }
+
+      } 
+        
+        <div class="text-secondary text-center mb-1 w-75 text-justify ml-auto mr-auto"> @Html.DisplayFor(modelItem => articleText) </div>
+        
+    </div>
+          }
+</div> 

@@ -11,6 +11,7 @@ using Newtonsoft.Json;
 
 namespace KhemicalKoder.Controllers
 {
+   
     public class ArticlesController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -31,7 +32,8 @@ namespace KhemicalKoder.Controllers
             articles.Reverse();
 
             if (id == null) {
-                article = articles.First();
+                //article = articles.First();
+                return View("ArticlesList", articles);
             }
             else
                 article = await _context.Article.FindAsync(id);
@@ -50,17 +52,37 @@ namespace KhemicalKoder.Controllers
             return View(article);
         }
 
+
+       
         public async Task<string> Search(string searchString)
         {
-            var articles = new List<Article>();
-
-            await foreach (var article in _context.Article.AsAsyncEnumerable())
-                if (article.Title.ToLowerInvariant().Contains(searchString.ToLowerInvariant(),
-                    StringComparison.InvariantCultureIgnoreCase))
-                    articles.Add(article);
-
+            List<Article> articles = await GetArticlesMatchingName(searchString);
 
             return JsonConvert.SerializeObject(articles);
+        }
+
+        private async Task<List<Article>> GetArticlesMatchingName(string searchString)
+        {
+            var articles = new List<Article>();
+            
+            if (searchString != null)
+            {
+
+                await foreach (var article in _context.Article.AsAsyncEnumerable())
+                    if (article.Title.ToLowerInvariant().Contains(searchString.ToLowerInvariant(),
+                        StringComparison.InvariantCultureIgnoreCase))
+                        articles.Add(article);
+            }
+
+            return articles;
+        }
+
+       
+        public async Task<IActionResult> SearchOnView(string searchString)
+        {
+            List<Article> articles = await GetArticlesMatchingName(searchString);
+
+            return View("ArticlesList", articles);
         }
     }
 }

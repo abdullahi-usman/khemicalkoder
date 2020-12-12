@@ -7,7 +7,7 @@
     var previous = ViewData["article-prev"];
 }
 
-<div class="form-inline my-2 float-right">
+<div class="form-inline my-2 float-right-lite float-clear-responsive">
     <input id="articles_search_bar" type="search" class="form-control mr-sm-2" placeholder="Article Search" aria-label="Article Search Box" />
     <button id="articles_search_btn" class="btn btn-outline-primary" type="submit" onclick="articles_search_clicked($('#articles_search_bar').val())">
         Search
@@ -15,7 +15,7 @@
     </button>
 </div>
 
-<div class="float-left">
+<div class="float-left-lite float-clear-responsive">
     @Model.Date.ToLongDateString()
 </div>
 
@@ -23,7 +23,7 @@
 
 <div id="articles_main" class="container text-center">
     <div class="display-4">@Model.Title</div>
-    <div class="text-center text-justify">@Model.Story</div>
+    <div class="text-center text-justify">@Html.DisplayFor(model => model.Story)</div>
 </div>
 
 <div class="container position-rel-bottom">
