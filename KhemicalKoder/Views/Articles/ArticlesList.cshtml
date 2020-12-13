@@ -4,7 +4,7 @@
 
 @model IEnumerable<Article>
 @{
-
+    
 }
 
 <form class="form-inline my-2" asp-controller="articles" asp-action="searchonview">
@@ -25,16 +25,28 @@
                     <a class="display-4 card-link text-info d-block" asp-area="" asp-controller="Articles" asp-action="Index" asp-route-id="@item.Id">@item.Title</a>
                 </div>
                 @{
-
+                    string _story;
+                    
                     if (item.Story.Length > 300)
                     {
+                        try
+                        {
 
-                        item.Story = @item.Story.Substring(0, item.Story.IndexOf(" ", 200));
+                            _story = item.Story.Substring(0, item.Story.IndexOf(" ", 200));
+                        }catch(ArgumentOutOfRangeException e)
+                        {
+                            _story = item.Story.Substring(0, 200);
+                        }
+                    } else
+                    {
+                        
+                        _story = item.Story;
                     }
 
+                    _story = System.Web.HttpUtility.HtmlDecode(_story);
                 }
 
-                <div class="text-secondary text-center mb-1 w-75 text-justify ml-auto mr-auto"> @Html.DisplayFor(modelItem => item.Story) </div>
+                <div class="text-secondary text-center mb-1 w-75 text-justify ml-auto mr-auto"> @Html.Raw(_story) </div>
 
             </div>
         }

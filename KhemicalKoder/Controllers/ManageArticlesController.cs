@@ -1,12 +1,15 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using KhemicalKoder.Data;
+using KhemicalKoder.Extensions;
 using KhemicalKoder.Models;
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace KhemicalKoder.Controllers
 {
@@ -14,10 +17,12 @@ namespace KhemicalKoder.Controllers
     public class ManageArticlesController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly IMemoryCache _cache;
 
-        public ManageArticlesController(ApplicationDbContext context)
+        public ManageArticlesController(ApplicationDbContext context, IMemoryCache cache)
         {
             _context = context;
+            _cache = cache;
         }
 
         // GET: ManageArticles
@@ -55,7 +60,15 @@ namespace KhemicalKoder.Controllers
             {
                 article.Date = DateTime.Now;
                 _context.Add(article);
-                await _context.SaveChangesAsync();
+
+                if ((await _context.SaveChangesAsync()) > 0)
+                {
+                    var articles = _context.Article.ToList();
+                    articles.Reverse();
+                    _cache.Set(CacheKeys.Article, articles);   
+                };
+
+
                 return RedirectToAction(nameof(Index));
             }
 
@@ -88,9 +101,15 @@ namespace KhemicalKoder.Controllers
                     var dbArticle = await _context.Article.FindAsync(id);
                     dbArticle.Title = article.Title;
                     dbArticle.Story = article.Story;
-                    
                     _context.Update(dbArticle);
-                    await _context.SaveChangesAsync();
+
+                    if ((await _context.SaveChangesAsync()) > 0)
+                    {
+                        var articles = _context.Article.ToList();
+                        articles.Reverse();
+                        _cache.Set(CacheKeys.Article, articles);
+                    };
+
                 }
                 catch (DbUpdateConcurrencyException)
                 {
