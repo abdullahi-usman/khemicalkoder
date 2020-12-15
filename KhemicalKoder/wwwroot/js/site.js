@@ -120,3 +120,13 @@ function manage_articles_preview_toggle() {
         $('#articles_preview_container').hide('slow');
     }
 }
+
+/* 
+ * ------------------------------------------------------------------------ 
+ *                        Service Worker - sw.js
+ * ------------------------------------------------------------------------
+ */
+
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/sw.js', { scope: '/' });
+}
