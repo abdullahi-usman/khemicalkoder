@@ -15,6 +15,13 @@ variables:
   buildConfiguration: 'Release'
 
 steps:
+- task: AzureRmWebAppDeployment@4
+  inputs:
+    ConnectionType: 'AzureRM'
+    azureSubscription: 'Azure Subscription 2(1)(7df84447-6f9c-4936-886e-392bbdf1726c)'
+    appType: 'webAppLinux'
+    WebAppName: 'khemicalkoder'
+    packageForLinux: '$(System.DefaultWorkingDirectory)/**/*.zip'
 - task: NuGetToolInstaller@1
 
 - task: NuGetCommand@2
