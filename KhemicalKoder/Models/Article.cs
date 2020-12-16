@@ -7,7 +7,7 @@ namespace KhemicalKoder.Models
 {
     public class Article
     {
-        [Required] public int Id { set; get; }
+        [Required] public string Id { set; get; }
 
         public DateTime Date { set; get; }
 

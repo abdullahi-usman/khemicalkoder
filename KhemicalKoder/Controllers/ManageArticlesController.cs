@@ -32,7 +32,7 @@ namespace KhemicalKoder.Controllers
         }
 
         // GET: ManageArticles/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(string? id)
         {
             if (id == null) return NotFound();
 
@@ -90,7 +90,7 @@ namespace KhemicalKoder.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Date,Title,Story")] Article article)
+        public async Task<IActionResult> Edit(string id, [Bind("Id,Date,Title,Story")] Article article)
         {
             if (id != article.Id) return NotFound();
 
@@ -125,7 +125,7 @@ namespace KhemicalKoder.Controllers
         }
 
         // GET: ManageArticles/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(string? id)
         {
             if (id == null) return NotFound();
 
@@ -148,7 +148,7 @@ namespace KhemicalKoder.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private bool ArticleExists(int id)
+        private bool ArticleExists(string id)
         {
             return _context.Article.Any(e => e.Id == id);
         }

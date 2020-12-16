@@ -39,7 +39,7 @@ namespace KhemicalKoder.Controllers
         }
 
         // GET: Articles
-        public async Task<ActionResult> Index(int? id)
+        public async Task<ActionResult> Index(string? id)
         {
             
             if (id == null)return View("ArticlesList", await GetArticlesAsync());
