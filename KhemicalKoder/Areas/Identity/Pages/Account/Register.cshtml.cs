@@ -17,7 +17,7 @@ using Microsoft.Extensions.Logging;
 namespace KhemicalKoder.Areas.Identity.Pages.Account
 {
     //[AllowAnonymous]
-    //[Authorize("IsAdmin")]
+    [Authorize("IsAdmin")]
     public class RegisterModel : PageModel
     {
         private readonly IEmailSender _emailSender;

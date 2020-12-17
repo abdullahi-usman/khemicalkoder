@@ -34,7 +34,7 @@ namespace KhemicalKoder
 
             services.AddSingleton<ICosmosDbService>(InitializeCosmosClientInstanceAsync(Configuration.GetSection("CosmosDb")).GetAwaiter().GetResult());
 
-            
+
             services.AddControllersWithViews();
             services.AddRazorPages();
         }
