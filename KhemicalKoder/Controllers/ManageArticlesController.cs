@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using KhemicalKoder.Data;
 using KhemicalKoder.Extensions;
 using KhemicalKoder.Models;
+using KhemicalKoder.Services;
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -13,13 +14,13 @@ using Microsoft.Extensions.Caching.Memory;
 
 namespace KhemicalKoder.Controllers
 {
-    [Authorize("IsAdmin")]
+    //[Authorize("IsAdmin")]
     public class ManageArticlesController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        private readonly ICosmosDbService _context;
         private readonly IMemoryCache _cache;
 
-        public ManageArticlesController(ApplicationDbContext context, IMemoryCache cache)
+        public ManageArticlesController(ICosmosDbService context, IMemoryCache cache)
         {
             _context = context;
             _cache = cache;
@@ -28,7 +29,7 @@ namespace KhemicalKoder.Controllers
         // GET: ManageArticles
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Article.ToListAsync());
+            return View(await _context.GetItemsAsync("SELECT * from Articles"));
         }
 
         // GET: ManageArticles/Details/5
@@ -36,8 +37,8 @@ namespace KhemicalKoder.Controllers
         {
             if (id == null) return NotFound();
 
-            var article = await _context.Article
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var article = await _context.GetItemAsync(id);
+                
             if (article == null) return NotFound();
 
             return View(article);
@@ -54,33 +55,31 @@ namespace KhemicalKoder.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Title,Story")] Article article)
+        public async Task<IActionResult> Create([Bind("id,Title,Story")] Article article)
         {
-            if (ModelState.IsValid)
-            {
+            /*if (ModelState.IsValid)
+            {*/
+
+            article.id = Guid.NewGuid().ToString();
                 article.Date = DateTime.Now;
-                _context.Add(article);
+                await _context.AddItemAsync(article);
 
-                if ((await _context.SaveChangesAsync()) > 0)
-                {
-                    var articles = _context.Article.ToList();
-                    articles.Reverse();
-                    _cache.Set(CacheKeys.Article, articles);   
-                };
-
-
+                var articles = await _context.GetItemsAsync("SELECT * from Articles");
+                articles.Reverse();
+                _cache.Set(CacheKeys.Article, articles);   
+         
                 return RedirectToAction(nameof(Index));
-            }
+           /* }*/
 
-            return View(article);
+            //return View(article);
         }
 
         // GET: ManageArticles/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(string? id)
         {
             if (id == null) return NotFound();
 
-            var article = await _context.Article.FindAsync(id);
+            var article = await _context.GetItemAsync(id);
             if (article == null) return NotFound();
             return View(article);
         }
@@ -90,30 +89,29 @@ namespace KhemicalKoder.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("Id,Date,Title,Story")] Article article)
+        public async Task<IActionResult> Edit(string id, [Bind("id,Date,Title,Story")] Article article)
         {
-            if (id != article.Id) return NotFound();
+            if (id != article.id) return NotFound();
 
             if (ModelState.IsValid)
             {
+                IEnumerable<Article> articles = null;
                 try
                 {
-                    var dbArticle = await _context.Article.FindAsync(id);
+                    var dbArticle = await _context.GetItemAsync(id);
                     dbArticle.Title = article.Title;
                     dbArticle.Story = article.Story;
-                    _context.Update(dbArticle);
+                    await _context.UpdateItemAsync(id, dbArticle);
 
-                    if ((await _context.SaveChangesAsync()) > 0)
-                    {
-                        var articles = _context.Article.ToList();
-                        articles.Reverse();
-                        _cache.Set(CacheKeys.Article, articles);
-                    };
 
+                    articles = await _context.GetItemsAsync("SELECT * from Articles");
+                    articles.Reverse();
+                    _cache.Set(CacheKeys.Article, articles);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ArticleExists(article.Id))
+
+                    if (articles == null || !articles.Any(e => e.id == id))
                         return NotFound();
                     throw;
                 }
@@ -129,8 +127,8 @@ namespace KhemicalKoder.Controllers
         {
             if (id == null) return NotFound();
 
-            var article = await _context.Article
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var article = await _context.GetItemAsync(id);
+                
             if (article == null) return NotFound();
 
             return View(article);
@@ -140,17 +138,16 @@ namespace KhemicalKoder.Controllers
         [HttpPost]
         [ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(string id)
         {
-            var article = await _context.Article.FindAsync(id);
-            _context.Article.Remove(article);
-            await _context.SaveChangesAsync();
+            await _context.DeleteItemAsync(id);
+            
             return RedirectToAction(nameof(Index));
         }
 
-        private bool ArticleExists(string id)
+        private async Task<bool> ArticleExists(string id)
         {
-            return _context.Article.Any(e => e.Id == id);
+            return (await _context.GetItemsAsync("SELECT * from Articles")).Any(e => e.id == id);
         }
     }
 }

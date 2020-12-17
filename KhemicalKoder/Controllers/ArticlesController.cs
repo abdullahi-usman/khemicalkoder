@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using KhemicalKoder.Data;
 using KhemicalKoder.Extensions;
 using KhemicalKoder.Models;
+using KhemicalKoder.Services;
+
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
@@ -17,10 +19,10 @@ namespace KhemicalKoder.Controllers
    
     public class ArticlesController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        private readonly ICosmosDbService _context;
         private readonly IMemoryCache _cache;
 
-        public ArticlesController(ApplicationDbContext context, IMemoryCache cache)
+        public ArticlesController(ICosmosDbService context, IMemoryCache cache)
         {
             _context = context;
             _cache = cache;
@@ -29,9 +31,9 @@ namespace KhemicalKoder.Controllers
         private async Task<List<Article>> GetArticlesAsync()
         {
             
-            return await _cache.GetOrCreateAsync(CacheKeys.Article, async entry =>
+            return (List<Article>)await _cache.GetOrCreateAsync(CacheKeys.Article, async entry =>
             {
-                var articles = await _context.Article.ToListAsync();
+                var articles = await _context.GetItemsAsync("SELECT * from c");
                 articles.Reverse();
 
                 return articles;
@@ -44,22 +46,22 @@ namespace KhemicalKoder.Controllers
             
             if (id == null)return View("ArticlesList", await GetArticlesAsync());
 
-            if (!_context.Article.Any())
-                return View("Error", "No Article");
-
             var articles = await GetArticlesAsync();
 
-            var article = articles.Find(predict => predict.Id == id);
+            if (!articles.Any())
+                return View("Error", "No Article");
+
+            var article = articles.Find(predict => predict.id == id);
 
             if (article == null) return View("Error", "No Such Article");
 
-            var articlePosition = articles.FindIndex(predict => predict.Id == article.Id);
+            var articlePosition = articles.FindIndex(predict => predict.id == article.id);
 
             if (articles.Count > articlePosition + 1)
-                ViewData["article-next"] = articles.ElementAt(articlePosition + 1).Id;
+                ViewData["article-next"] = articles.ElementAt(articlePosition + 1).id;
 
             if (articlePosition > 0)
-                ViewData["article-prev"] = articles.ElementAt(articlePosition - 1).Id;
+                ViewData["article-prev"] = articles.ElementAt(articlePosition - 1).id;
 
             return View(article);
         }

@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
+using Newtonsoft.Json;
+
 using System;
 using System.ComponentModel.DataAnnotations;
 
@@ -7,12 +9,11 @@ namespace KhemicalKoder.Models
 {
     public class Article
     {
-        [Required] public string Id { set; get; }
+        [Required] [JsonProperty(PropertyName = "id")] public string id { set; get; }
 
-        public DateTime Date { set; get; }
+        [JsonProperty(PropertyName = "Date")] public DateTime Date { set; get; }
+        [Required] [JsonProperty(PropertyName = "Title")] public string Title { set; get; }
 
-        [Required] public string Title { set; get; }
-
-        [Required] [DataType(DataType.Html)] public string Story { set; get; }
+        [Required] [DataType(DataType.Html)] [JsonProperty(PropertyName = "Story")] public string Story { set; get; }
     }
 }
