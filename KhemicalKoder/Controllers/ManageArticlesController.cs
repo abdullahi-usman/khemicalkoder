@@ -14,7 +14,7 @@ using Microsoft.Extensions.Caching.Memory;
 
 namespace KhemicalKoder.Controllers
 {
-    //[Authorize("IsAdmin")]
+    [Authorize("IsAdmin")]
     public class ManageArticlesController : Controller
     {
         private readonly ICosmosDbService _context;
