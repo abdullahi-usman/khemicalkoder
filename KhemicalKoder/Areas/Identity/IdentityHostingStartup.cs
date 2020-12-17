@@ -14,7 +14,7 @@ namespace KhemicalKoder.Areas.Identity
         {
             builder.ConfigureServices((context, services) =>
             {
-                /*services.AddScoped<IUserClaimsPrincipalFactory<KhemicalKoderUser>, AdditionalUserClaimsFactory>();*/
+                services.AddScoped<IUserClaimsPrincipalFactory<KhemicalKoderUser>, AdditionalUserClaimsFactory>();
 
                 services.AddAuthorization(options =>
                     options.AddPolicy("IsAdmin", policy => policy.RequireClaim("IsAdmin")));
