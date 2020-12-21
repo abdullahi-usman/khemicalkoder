@@ -140,6 +140,10 @@ namespace KhemicalKoder.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
+            var articles = await _context.GetItemsAsync("SELECT * from Articles");
+            articles.Reverse();
+            _cache.Set(CacheKeys.Article, articles);
+
             await _context.DeleteItemAsync(id);
             
             return RedirectToAction(nameof(Index));
