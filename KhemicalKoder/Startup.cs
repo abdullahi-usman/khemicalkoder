@@ -80,7 +80,7 @@ namespace KhemicalKoder
         private async Task<CosmosDbService> InitializeCosmosClientInstanceAsync(IConfigurationSection configurationSection)
         {
 
-            string databaseName = "KhmeicalKoderLocal-DB";// configurationSection.GetSection("DatabaseName").Value;
+            string databaseName = "KhmeicalKoder-DB";// configurationSection.GetSection("DatabaseName").Value;
             string containerName = "Articles";//configurationSection.GetSection("ContainerName").Value;
             string account = configurationSection.GetSection("Account").Value;
             string key = configurationSection.GetSection("Key").Value;
