@@ -29,7 +29,7 @@ namespace KhemicalKoder.Controllers
         // GET: ManageArticles
         public async Task<IActionResult> Index()
         {
-            return View(await _context.GetItemsAsync("SELECT * from Articles"));
+            return View(await _context.GetItemsAsync("SELECT * from Articles article ORDER BY article.Date DESC"));
         }
 
         // GET: ManageArticles/Details/5
@@ -64,8 +64,8 @@ namespace KhemicalKoder.Controllers
                 article.Date = DateTime.Now;
                 await _context.AddItemAsync(article);
 
-                var articles = await _context.GetItemsAsync("SELECT * from Articles");
-                articles.Reverse();
+                var articles = await _context.GetItemsAsync("SELECT * from Articles article ORDER BY article.Date DESC");
+                
                 _cache.Set(CacheKeys.Article, articles);   
          
                 return RedirectToAction(nameof(Index));
@@ -104,8 +104,8 @@ namespace KhemicalKoder.Controllers
                     await _context.UpdateItemAsync(id, dbArticle);
 
 
-                    articles = await _context.GetItemsAsync("SELECT * from Articles");
-                    articles.Reverse();
+                    articles = await _context.GetItemsAsync("SELECT * from Articles article ORDER BY article.Date DESC");
+                    
                     _cache.Set(CacheKeys.Article, articles);
                 }
                 catch (DbUpdateConcurrencyException)
@@ -140,8 +140,8 @@ namespace KhemicalKoder.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
-            var articles = await _context.GetItemsAsync("SELECT * from Articles");
-            articles.Reverse();
+            var articles = await _context.GetItemsAsync("SELECT * from Articles article ORDER BY article.Date DESC");
+            
             _cache.Set(CacheKeys.Article, articles);
 
             await _context.DeleteItemAsync(id);
@@ -149,9 +149,5 @@ namespace KhemicalKoder.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private async Task<bool> ArticleExists(string id)
-        {
-            return (await _context.GetItemsAsync("SELECT * from Articles")).Any(e => e.id == id);
-        }
     }
 }

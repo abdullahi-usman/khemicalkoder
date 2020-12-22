@@ -33,8 +33,7 @@ namespace KhemicalKoder.Controllers
             
             return (List<Article>)await _cache.GetOrCreateAsync(CacheKeys.Article, async entry =>
             {
-                var articles = await _context.GetItemsAsync("SELECT * from c");
-                articles.Reverse();
+                var articles = await _context.GetItemsAsync("SELECT * from Articles article ORDER BY article.Date DESC");
 
                 return articles;
             });
