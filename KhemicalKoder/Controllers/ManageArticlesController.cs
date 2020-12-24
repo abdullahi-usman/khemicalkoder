@@ -17,10 +17,10 @@ namespace KhemicalKoder.Controllers
     [Authorize("IsAdmin")]
     public class ManageArticlesController : Controller
     {
-        private readonly ICosmosDbService _context;
+        private readonly ApplicationDbContext _context;
         private readonly IMemoryCache _cache;
 
-        public ManageArticlesController(ICosmosDbService context, IMemoryCache cache)
+        public ManageArticlesController(ApplicationDbContext context, IMemoryCache cache)
         {
             _context = context;
             _cache = cache;
@@ -29,7 +29,7 @@ namespace KhemicalKoder.Controllers
         // GET: ManageArticles
         public async Task<IActionResult> Index()
         {
-            return View(await _context.GetItemsAsync("SELECT * from Articles"));
+            return View(await _context.Article.ToListAsync());
         }
 
         // GET: ManageArticles/Details/5
@@ -37,7 +37,7 @@ namespace KhemicalKoder.Controllers
         {
             if (id == null) return NotFound();
 
-            var article = await _context.GetItemAsync(id);
+            var article = await _context.Article.FindAsync(id);
                 
             if (article == null) return NotFound();
 
@@ -62,12 +62,12 @@ namespace KhemicalKoder.Controllers
 
             article.id = Guid.NewGuid().ToString();
                 article.Date = DateTime.Now;
-                await _context.AddItemAsync(article);
+                await _context.Article.AddAsync(article);
 
-                var articles = await _context.GetItemsAsync("SELECT * from Articles");
+                /*var articles = await _context.
                 articles.Reverse();
                 _cache.Set(CacheKeys.Article, articles);   
-         
+         */
                 return RedirectToAction(nameof(Index));
            /* }*/
 
@@ -79,7 +79,7 @@ namespace KhemicalKoder.Controllers
         {
             if (id == null) return NotFound();
 
-            var article = await _context.GetItemAsync(id);
+            var article = await _context.Article.FindAsync(id);
             if (article == null) return NotFound();
             return View(article);
         }
@@ -98,15 +98,17 @@ namespace KhemicalKoder.Controllers
                 IEnumerable<Article> articles = null;
                 try
                 {
-                    var dbArticle = await _context.GetItemAsync(id);
+                    var dbArticle = await _context.Article.FindAsync(id);
                     dbArticle.Title = article.Title;
                     dbArticle.Story = article.Story;
-                    await _context.UpdateItemAsync(id, dbArticle);
+                    _context.Update(dbArticle);
+
+                    await _context.SaveChangesAsync();
 
 
-                    articles = await _context.GetItemsAsync("SELECT * from Articles");
-                    articles.Reverse();
-                    _cache.Set(CacheKeys.Article, articles);
+                    //articles = await _context.GetItemsAsync("SELECT * from Articles");
+                    //articles.Reverse();
+                    //_cache.Set(CacheKeys.Article, articles);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -127,7 +129,7 @@ namespace KhemicalKoder.Controllers
         {
             if (id == null) return NotFound();
 
-            var article = await _context.GetItemAsync(id);
+            var article = await _context.Article.FindAsync(id);
                 
             if (article == null) return NotFound();
 
@@ -140,14 +142,11 @@ namespace KhemicalKoder.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
-            await _context.DeleteItemAsync(id);
+            //await _context.Article.Remove();
             
             return RedirectToAction(nameof(Index));
         }
 
-        private async Task<bool> ArticleExists(string id)
-        {
-            return (await _context.GetItemsAsync("SELECT * from Articles")).Any(e => e.id == id);
-        }
+       
     }
 }

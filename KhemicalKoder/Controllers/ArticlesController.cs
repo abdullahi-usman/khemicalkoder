@@ -19,10 +19,10 @@ namespace KhemicalKoder.Controllers
    
     public class ArticlesController : Controller
     {
-        private readonly ICosmosDbService _context;
+        private readonly ApplicationDbContext _context;
         private readonly IMemoryCache _cache;
 
-        public ArticlesController(ICosmosDbService context, IMemoryCache cache)
+        public ArticlesController(ApplicationDbContext context, IMemoryCache cache)
         {
             _context = context;
             _cache = cache;
@@ -33,9 +33,8 @@ namespace KhemicalKoder.Controllers
             
             return (List<Article>)await _cache.GetOrCreateAsync(CacheKeys.Article, async entry =>
             {
-                var articles = await _context.GetItemsAsync("SELECT * from c");
-                articles.Reverse();
-
+                var articles = await _context.Article.ToListAsync();
+                
                 return articles;
             });
         }
