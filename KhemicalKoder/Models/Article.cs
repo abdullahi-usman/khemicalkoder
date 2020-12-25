@@ -9,11 +9,11 @@ namespace KhemicalKoder.Models
 {
     public class Article
     {
-        [Required] [JsonProperty(PropertyName = "id")] public string id { set; get; }
+        [Required] [DataType(DataType.Text)] public string id { set; get; }
 
-        [JsonProperty(PropertyName = "Date")] public DateTime Date { set; get; }
-        [Required] [JsonProperty(PropertyName = "Title")] public string Title { set; get; }
+        [DataType(DataType.DateTime)] public DateTime Date { set; get; }
+        [Required] [DataType(DataType.Text)]public string Title { set; get; }
 
-        [Required] [DataType(DataType.Html)] [JsonProperty(PropertyName = "Story")] public string Story { set; get; }
+        [Required] [DataType(DataType.Html)]  public string Story { set; get; }
     }
 }
