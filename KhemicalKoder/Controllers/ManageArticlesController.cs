@@ -52,7 +52,7 @@ namespace KhemicalKoder.Controllers
 
         private void UpdateCache()
         {
-            var articles = from Article _article in _context.Article orderby _article.Date descending select _article;
+            var articles = from Article _article in _context.Article orderby _article.Date ascending select _article;
             _cache.Set(CacheKeys.Article, articles);
         }
 
