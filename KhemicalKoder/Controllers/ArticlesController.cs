@@ -31,11 +31,11 @@ namespace KhemicalKoder.Controllers
         private async Task<List<Article>> GetArticlesAsync()
         {
             
-            return (List<Article>)await _cache.GetOrCreateAsync(CacheKeys.Article, async entry =>
+            return await _cache.GetOrCreateAsync(CacheKeys.Article, async entry =>
             {
-                var articles = await _context.Article.ToListAsync();
-                
-                return articles;
+                var articles = from Article _article in _context.Article orderby _article.Date descending select _article;
+
+                return articles.ToList();
             });
         }
 

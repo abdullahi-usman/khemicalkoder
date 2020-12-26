@@ -50,28 +50,33 @@ namespace KhemicalKoder.Controllers
             return View();
         }
 
+        private void UpdateCache()
+        {
+            var articles = from Article _article in _context.Article orderby _article.Date descending select _article;
+            _cache.Set(CacheKeys.Article, articles);
+        }
+
         // POST: ManageArticles/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("id,Title,Story")] Article article)
+        public async Task<IActionResult> Create([Bind("Title,Story")] Article article)
         {
-            /*if (ModelState.IsValid)
-            {*/
+            if (ModelState.IsValid)
+            {
 
-            article.id = Guid.NewGuid().ToString();
+                article.id = Guid.NewGuid().ToString();
                 article.Date = DateTime.Now;
-                await _context.Article.AddAsync(article);
+                _context.Article.Add(article);
+                await _context.SaveChangesAsync();
 
-                /*var articles = await _context.
-                articles.Reverse();
-                _cache.Set(CacheKeys.Article, articles);   
-         */
+                UpdateCache();
+
                 return RedirectToAction(nameof(Index));
-           /* }*/
+            }
 
-            //return View(article);
+            return View(article);
         }
 
         // GET: ManageArticles/Edit/5
@@ -103,12 +108,9 @@ namespace KhemicalKoder.Controllers
                     dbArticle.Story = article.Story;
                     _context.Update(dbArticle);
 
+                    UpdateCache();
+
                     await _context.SaveChangesAsync();
-
-
-                    //articles = await _context.GetItemsAsync("SELECT * from Articles");
-                    //articles.Reverse();
-                    //_cache.Set(CacheKeys.Article, articles);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -142,7 +144,14 @@ namespace KhemicalKoder.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
-            //await _context.Article.Remove();
+            var article = await _context.Article.FindAsync(id);
+            if (article != null)
+            {
+                _context.Article.Remove(article);
+                await _context.SaveChangesAsync();
+
+                UpdateCache();
+            }
             
             return RedirectToAction(nameof(Index));
         }
